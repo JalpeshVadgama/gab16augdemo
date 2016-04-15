@@ -4,8 +4,8 @@ namespace GabDemoApp.Models
 {
     public class Employee
     {
-        [JsonProperty(PropertyName = "employeeId")]
-        public int EmployeeId { get; set; }
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
 
         [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; set; }
