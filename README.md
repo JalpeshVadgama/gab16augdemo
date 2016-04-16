@@ -11,3 +11,5 @@ Before you run application. Don't forgot to update following settings in web.con
   ```
 
 
+You can find presentation for this demo at following location-
+https://speakerdeck.com/jalpesh07/introduction-to-documentdb #GlobalAzure
