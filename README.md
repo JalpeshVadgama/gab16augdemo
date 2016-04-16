@@ -1,7 +1,7 @@
 # gab16augdemo
-Demo application for Glboal azure bootcamp 2016 document db presentation
+Demo application for Glboal azure bootcamp 2016 DocumentDB presentation
 
-Before you run application. Don't forgot to update following settings in web.config as per your document db deatils under appsettings section.
+Before you run application. Don't forgot to update following settings in web.config as per your DocumentDB deatils under appsettings section.
 
  ```html
  <add key="endpoint" value="Your endpoint here" />
