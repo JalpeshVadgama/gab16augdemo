@@ -10,6 +10,9 @@ using Microsoft.Azure.Documents.Linq;
 
 namespace GabDemoApp.Service
 {
+    /// <summary>
+    /// A business service class to demonstrate document db
+    /// </summary>
     public class EmployeeService : IDisposable
     {
 
