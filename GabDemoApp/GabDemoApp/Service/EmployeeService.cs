@@ -96,7 +96,7 @@ namespace GabDemoApp.Service
         }
 
         
-        public  async Task<Document> CreateEmployeeAsync(EmployeeService employee)
+        public  async Task<Document> CreateEmployeeAsync(Employee employee)
         {
             return await Client.CreateDocumentAsync(Collection.SelfLink, employee);
         }

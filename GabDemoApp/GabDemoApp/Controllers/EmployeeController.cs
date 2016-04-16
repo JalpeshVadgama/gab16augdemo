@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using GabDemoApp.Models;
 using GabDemoApp.Service;
 
 namespace GabDemoApp.Controllers
@@ -17,81 +15,91 @@ namespace GabDemoApp.Controllers
             _employeeService = new EmployeeService();
         }
 
-        // GET: Employee
+       
         public ActionResult Index()
         {
-            return View();
+            var employees = _employeeService.GetEmployees();
+            return View(employees);
         }
 
-        // GET: Employee/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
-            return View();
+            var employee = _employeeService.GetEmployee(id);
+            return View(employee);
         }
 
-        // GET: Employee/Create
         public ActionResult Create()
         {
+
             return View();
         }
 
-        // POST: Employee/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public  async Task<ActionResult> Create(Employee employee)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    await _employeeService.CreateEmployeeAsync(employee);
+                    return RedirectToAction("Index");
 
-                return RedirectToAction("Index");
+                }
+                return View(employee);
             }
             catch
             {
-                return View();
+                return View(employee);
             }
         }
 
-        // GET: Employee/Edit/5
-        public ActionResult Edit(int id)
+       
+        public ActionResult Edit(string id)
         {
-            return View();
+            var employee = _employeeService.GetEmployee(id);
+            return View(employee);
         }
 
-        // POST: Employee/Edit/5
+        
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public async Task<ActionResult> Edit(int id, Employee employee)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    await _employeeService.UpdateEmployeeAsync(employee);
+                    return RedirectToAction("Index");
+                }
+                return View(employee);
             }
             catch
             {
-                return View();
+                return View(employee);
             }
         }
 
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            var employee = _employeeService.GetEmployee(id);
+            return View(employee);
         }
 
-        // POST: Employee/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public async Task<ActionResult>  Delete(int id, Employee employee)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    await _employeeService.DeleteEmployeeAsyc(employee);
+                    return RedirectToAction("Index");
+                }
+                return View(employee);
             }
             catch
             {
-                return View();
+                return View(employee);
             }
         }
 
