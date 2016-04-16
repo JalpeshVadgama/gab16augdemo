@@ -62,7 +62,7 @@ namespace GabDemoApp.Controllers
 
         
         [HttpPost]
-        public async Task<ActionResult> Edit(int id, Employee employee)
+        public async Task<ActionResult> Edit(string id, Employee employee)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace GabDemoApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult>  Delete(int id, Employee employee)
+        public async Task<ActionResult>  Delete(string id, Employee employee)
         {
             try
             {
