@@ -10,14 +10,14 @@ using Microsoft.Azure.Documents.Linq;
 
 namespace GabDemoApp.Service
 {
-    public class EmployeeService
+    public class EmployeeService : IDisposable
     {
 
         /// <summary>
         /// Retrieve the Database ID to use from the Web Config
         /// </summary>
-        private static string _databaseId;
-        private static String DatabaseId
+        private  string _databaseId;
+        private  String DatabaseId
         {
             get
             {
@@ -33,107 +33,76 @@ namespace GabDemoApp.Service
         /// <summary>
         /// Retrieves the Collection to use from Web Config
         /// </summary>
-        private static string collectionId;
-        private static String CollectionId
+        private  string _collectionId;
+        private  String CollectionId
         {
             get
             {
-                if (string.IsNullOrEmpty(collectionId))
+                if (string.IsNullOrEmpty(_collectionId))
                 {
-                    collectionId = ConfigurationManager.AppSettings["collection"];
+                    _collectionId = ConfigurationManager.AppSettings["collection"];
                 }
 
-                return collectionId;
+                return _collectionId;
             }
         }
 
 
-        private static DocumentClient client;
-        private static DocumentClient Client
+        private  DocumentClient _client;
+        private  DocumentClient Client
         {
             get
             {
-                if (client == null)
+                if (_client == null)
                 {
                     string endpoint = ConfigurationManager.AppSettings["endpoint"];
                     string authKey = ConfigurationManager.AppSettings["authKey"];
                     Uri endpointUri = new Uri(endpoint);
-                    client = new DocumentClient(endpointUri, authKey);
+                    _client = new DocumentClient(endpointUri, authKey);
                 }
 
-                return client;
+                return _client;
             }
         }
 
-        private static Database _database;
-        private static Database Database
-        {
-            get
-            {
-                if (_database == null)
-                {
-                    _database = ReadOrCreateDatabase();
-                }
+        private  Database _database;
+        private  Database Database => _database ?? (_database = ReadOrCreateDatabase());
 
-                return _database;
-            }
-        }
-
-        private static Database ReadOrCreateDatabase()
+        private  Database ReadOrCreateDatabase()
         {
 
             var db = Client.CreateDatabaseQuery()
-                            .Where(d => d.Id == DatabaseId)
-                            .AsEnumerable()
-                            .FirstOrDefault();
-
-            if (db == null)
-            {
-                db = Client.CreateDatabaseAsync(new Database { Id = DatabaseId }).Result;
-            }
+                .Where(d => d.Id == DatabaseId)
+                .AsEnumerable()
+                .FirstOrDefault() ?? Client.CreateDatabaseAsync(new Database { Id = DatabaseId }).Result;
 
             return db;
         }
 
 
-        private static DocumentCollection _collection;
-        private static DocumentCollection Collection
-        {
-            get
-            {
-                if (_collection == null)
-                {
-                    _collection = ReadOrCreateCollection(Database.SelfLink);
-                }
+        private  DocumentCollection _collection;
+        private  DocumentCollection Collection => _collection ?? (_collection = ReadOrCreateCollection(Database.SelfLink));
 
-                return _collection;
-            }
-        }
-
-        private static DocumentCollection ReadOrCreateCollection(string databaseLink)
+        private  DocumentCollection ReadOrCreateCollection(string databaseLink)
         {
 
             var col = Client.CreateDocumentCollectionQuery(databaseLink)
-                              .Where(c => c.Id == CollectionId)
-                              .AsEnumerable()
-                              .FirstOrDefault();
-
-            if (col == null)
-            {
-                col = Client.CreateDocumentCollectionAsync(databaseLink, new DocumentCollection { Id = CollectionId }).Result;
-            }
+                .Where(c => c.Id == CollectionId)
+                .AsEnumerable()
+                .FirstOrDefault() ??
+                      Client.CreateDocumentCollectionAsync(databaseLink, new DocumentCollection { Id = CollectionId }).Result;
 
             return col;
         }
 
         
-        public static async Task<Document> CreateEmployeeAsync(EmployeeService employee)
+        public  async Task<Document> CreateEmployeeAsync(EmployeeService employee)
         {
             return await Client.CreateDocumentAsync(Collection.SelfLink, employee);
         }
 
 
-        public static List<Employee> GetEmployees()
+        public  List<Employee> GetEmployees()
         {
             return Client.CreateDocumentQuery<Employee>(Collection.DocumentsLink)
                     .AsEnumerable()
@@ -142,7 +111,7 @@ namespace GabDemoApp.Service
 
 
         
-        public static Employee GetEmployee(string id)
+        public  Employee GetEmployee(string id)
         {
             return Client.CreateDocumentQuery<Employee>(Collection.DocumentsLink)
                         .Where(d => d.Id == id)
@@ -172,9 +141,9 @@ namespace GabDemoApp.Service
 
         }
 
-
-
-
-
+        public void Dispose()
+        {
+           
+        }
     }
 }
